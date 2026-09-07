@@ -1,0 +1,6 @@
+[2026-08-22 16:55:14] DB_ERROR: SQLSTATE[HY000]: General error: 2006 MySQL server has gone away in C:\xampp\htdocs\bookstore\app\core\Model.php:15
+[2026-08-22 16:55:19] DB_ERROR: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\bookstore\config\database.php:21
+[2026-08-27 14:20:48] ERROR: mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\xampp\htdocs\bookstore\app\helpers\functions.php:374
+[2026-08-30 17:21:12] 404: Controller not found: NonexistentPage123Controller - URI: /bookstore/nonexistent-page-123
+[2026-08-30 17:21:33] 404: Controller not found: NonexistentPage123Controller - URI: /bookstore/nonexistent-page-123
+[2026-08-30 17:21:37] 404: Controller not found: NonexistentPage123Controller - URI: /bookstore/nonexistent-page-123
