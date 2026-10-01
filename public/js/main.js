@@ -263,6 +263,127 @@
         });
     }
 
+    /* ---------- 15. Admin collapsible form panels (xổ ra kiểu thêm sách) ---------- */
+    function initCollapsible() {
+        doc.addEventListener('click', function (e) {
+            var toggler = e.target.closest('[data-toggle-target]');
+            if (!toggler) { return; }
+            e.preventDefault();
+            var target = doc.getElementById(toggler.getAttribute('data-toggle-target'));
+            if (!target) { return; }
+            var isOpen = target.classList.contains('open');
+            // Đóng các panel khác cùng nhóm để giao diện gọn
+            var group = toggler.getAttribute('data-toggle-group');
+            if (group) {
+                doc.querySelectorAll('[data-toggle-group="' + group + '"]').forEach(function (btn) {
+                    var other = doc.getElementById(btn.getAttribute('data-toggle-target'));
+                    if (other && other !== target) { other.classList.remove('open'); }
+                    if (btn !== toggler) { btn.classList.remove('active'); }
+                });
+            }
+            target.classList.toggle('open', !isOpen);
+            toggler.classList.toggle('active', !isOpen);
+            if (!isOpen) {
+                setTimeout(function () {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    var first = target.querySelector('input, select, textarea');
+                    if (first) { first.focus({ preventScroll: true }); }
+                }, 60);
+            }
+        });
+        // Mở panel Sửa khi quay lại trang có lỗi (giữ id trên URL: #edit-3, #add-panel)
+        if (window.location.hash) {
+            var el = doc.getElementById(window.location.hash.substring(1));
+            if (el && el.classList.contains('collapsible')) { el.classList.add('open'); }
+        }
+    }
+
+    /* ---------- 16. Modal popup (dùng cho Thêm/Sửa khuyến mãi) ---------- */
+    function openModal(overlay) {
+        if (!overlay) { return; }
+        overlay.classList.add('open');
+        overlay.setAttribute('aria-hidden', 'false');
+        body.classList.add('modal-open');
+        var first = overlay.querySelector('.modal-body input, .modal-body select, .modal-body textarea');
+        if (first) { setTimeout(function () { first.focus({ preventScroll: true }); }, 120); }
+    }
+    function closeModal(overlay) {
+        if (!overlay) { return; }
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden', 'true');
+        if (!doc.querySelector('.modal-overlay.open')) {
+            body.classList.remove('modal-open');
+        }
+    }
+    function initModals() {
+        doc.addEventListener('click', function (e) {
+            var opener = e.target.closest('[data-modal-open]');
+            if (opener) {
+                e.preventDefault();
+                openModal(doc.getElementById(opener.getAttribute('data-modal-open')));
+                return;
+            }
+            if (e.target.closest('[data-modal-close]')) {
+                closeModal(e.target.closest('.modal-overlay'));
+                return;
+            }
+            if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+                closeModal(e.target);
+            }
+        });
+        doc.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                doc.querySelectorAll('.modal-overlay.open').forEach(closeModal);
+            }
+        });
+    }
+
+    /* ---------- 17. Nạp đúng dữ liệu mã khuyến mãi vào modal Sửa ---------- */
+    function initCouponEditModal() {
+        var modal = doc.getElementById('coupon-edit-modal');
+        if (!modal) { return; }
+        var form = modal.querySelector('form');
+        var titleCode = modal.querySelector('[data-edit-title-code]');
+        doc.addEventListener('click', function (e) {
+            var btn = e.target.closest('[data-edit-coupon]');
+            if (!btn) { return; }
+            e.preventDefault();
+            var get = function (name) { return btn.getAttribute('data-' + name) || ''; };
+            form.querySelector('[name="id"]').value = get('id');
+            form.querySelector('[name="code"]').value = get('code');
+            form.querySelector('[name="type"]').value = get('type') || 'percent';
+            form.querySelector('[name="value"]').value = get('value');
+            form.querySelector('[name="min_order"]').value = get('min-order');
+            form.querySelector('[name="max_uses"]').value = get('max-uses');
+            form.querySelector('[name="start_date"]').value = get('start');
+            form.querySelector('[name="end_date"]').value = get('end');
+            form.querySelector('[name="status"]').value = get('status') || '1';
+            if (titleCode) { titleCode.textContent = get('code'); }
+            openModal(modal);
+        });
+    }
+
+    /* ---------- 18. Chống lăn chuột làm nhảy số trong ô number (giá, tồn kho...) ---------- */
+    function initNumberWheelGuard() {
+        // Khi đang nhập số mà lăn chuột thì trình duyệt tự tăng giảm giá trị -> blur để giữ nguyên số đang nhập
+        doc.addEventListener('wheel', function () {
+            var el = doc.activeElement;
+            if (el && el.tagName === 'INPUT' && el.type === 'number') {
+                el.blur();
+            }
+        }, { passive: true });
+        doc.querySelectorAll('input[type="number"]').forEach(function (input) {
+            input.addEventListener('wheel', function (e) {
+                e.preventDefault();
+                input.blur();
+            }, { passive: false });
+            // Chỉ cho đổi số bằng phím lên xuống khi đã focus, không cho lăn chuột đổi ngầm
+            input.addEventListener('focus', function () {
+                input.setAttribute('data-wheel-guard', '1');
+            });
+        });
+    }
+
     /* ---------- Init ---------- */
     function init() {
         initReveal();
@@ -279,6 +400,10 @@
         initCartBadge();
         initFlash();
         initHeroParallax();
+        initCollapsible();
+        initModals();
+        initCouponEditModal();
+        initNumberWheelGuard();
     }
 
     if (doc.readyState === 'loading') {

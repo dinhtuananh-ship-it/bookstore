@@ -27,6 +27,7 @@
         <?php
         $statusMeta = [
             'pending'      => ['Chờ xử lý', '⏳', 'badge-pending'],
+            'paid'         => ['Đã thanh toán', '💳', 'badge-pending'],
             'processing'   => ['Đang xử lý', '⚙️', 'badge-processing'],
             'shipping'     => ['Đang giao', '🚚', 'badge-shipping'],
             'completed'    => ['Hoàn thành', '✅', 'badge-completed'],
@@ -43,7 +44,7 @@
     </div>
 
     <h2 class="section-title">🕐 Đơn hàng gần đây</h2>
-    <div class="table-wrap">
+    <div class="table-responsive">
         <table class="admin-table">
             <thead>
             <tr>

@@ -87,6 +87,7 @@ class OrderModel extends Model
             [$orderId, $method, $transactionId, $amount]
         );
         $this->query('UPDATE orders SET status = "paid" WHERE id = ?', [$orderId]);
+        $this->recordStatus($orderId, 'paid', 'Thanh toán online thành công (' . $transactionId . ')', 'system');
     }
 
     public function getByUser(int $userId, int $page = 1, int $perPage = 10): array
@@ -256,6 +257,7 @@ class OrderModel extends Model
 
     public function topBooks(string $from, string $to, int $limit = 5): array
     {
+        $limit = max(1, $limit);
         return $this->fetchAll(
             "SELECT b.title, SUM(oi.quantity) AS qty, SUM(oi.price * oi.quantity) AS revenue
              FROM order_items oi
@@ -264,13 +266,14 @@ class OrderModel extends Model
              WHERE o.status NOT IN ('cancelled') AND DATE(o.created_at) BETWEEN ? AND ?
              GROUP BY oi.book_id, b.title
              ORDER BY qty DESC, revenue DESC
-             LIMIT ?",
-            [$from, $to, $limit]
+             LIMIT {$limit}",
+            [$from, $to]
         );
     }
 
     public function topCustomers(string $from, string $to, int $limit = 5): array
     {
+        $limit = max(1, $limit);
         return $this->fetchAll(
             "SELECT u.id, u.name, u.email, COUNT(o.id) AS orders, COALESCE(SUM(o.total), 0) AS total
              FROM users u
@@ -278,8 +281,8 @@ class OrderModel extends Model
              WHERE o.status NOT IN ('cancelled') AND DATE(o.created_at) BETWEEN ? AND ?
              GROUP BY u.id, u.name, u.email
              ORDER BY total DESC
-             LIMIT ?",
-            [$from, $to, $limit]
+             LIMIT {$limit}",
+            [$from, $to]
         );
     }
 

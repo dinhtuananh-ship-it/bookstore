@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= asset('css/style.css') ?>">
+    <link rel="stylesheet" href="<?= asset('css/style.css') ?>?v=20260917">
 </head>
 <body class="admin-body">
 <div class="admin-layout">
@@ -29,6 +29,9 @@
             <a href="<?= url('/admin/binh-luan') ?>"><span class="nav-ico">💬</span> Bình luận</a>
             <a href="<?= url('/admin/bao-cao') ?>"><span class="nav-ico">📈</span> Báo cáo</a>
         </nav>
+        <div class="admin-sidebar-foot" style="padding:12px;border-top:1px solid rgba(255,255,255,.12);">
+            <a href="<?= url('/') ?>" class="btn btn-sm" style="display:block;text-align:center;">← Quay lại trang web</a>
+        </div>
     </aside>
     <div class="admin-main">
         <header class="admin-topbar">
@@ -55,6 +58,6 @@
     </div>
 </div>
 
-<script src="<?= asset('js/main.js') ?>"></script>
+<script src="<?= asset('js/main.js') ?>?v=20260917"></script>
 </body>
 </html>

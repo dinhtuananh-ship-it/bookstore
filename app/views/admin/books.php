@@ -26,6 +26,7 @@
         <a class="btn btn-sm" href="<?= url('/admin/sach') ?>">Bỏ lọc</a>
     </form>
 
+    <div class="table-responsive">
     <table class="admin-table">
         <thead>
         <tr>
@@ -92,6 +93,7 @@
         <?php endif; ?>
         </tbody>
     </table>
+    </div>
 
     <?php if ($pages > 1): ?>
         <?= paginationLinks($page, $pages, array_filter($filters, static fn ($v) => $v !== '' && $v !== null && $v !== 0), '/admin/sach') ?>

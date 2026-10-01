@@ -45,22 +45,22 @@
 
             <div class="form-group">
                 <label>Giá bán (₫) *</label>
-                <input type="number" name="price" min="0" step="1000" required value="<?= e($book['price'] ?? '') ?>">
+                <input type="number" name="price" min="0" step="1000" required onwheel="this.blur()" value="<?= e($book['price'] ?? '') ?>">
             </div>
 
             <div class="form-group">
                 <label>Giá khuyến mãi (₫)</label>
-                <input type="number" name="sale_price" min="0" step="1000" value="<?= e($book['sale_price'] ?? '') ?>">
+                <input type="number" name="sale_price" min="0" step="1000" onwheel="this.blur()" value="<?= e($book['sale_price'] ?? '') ?>">
             </div>
 
             <div class="form-group">
                 <label>Tồn kho *</label>
-                <input type="number" name="stock" min="0" required value="<?= e($book['stock'] ?? '') ?>">
+                <input type="number" name="stock" min="0" required onwheel="this.blur()" value="<?= e($book['stock'] ?? '') ?>">
             </div>
 
             <div class="form-group">
                 <label>Số tập</label>
-                <input type="number" name="volumes" min="0" max="100" value="<?= e((int) ($book['volumes'] ?? 0)) ?>">
+                <input type="number" name="volumes" min="0" max="100" onwheel="this.blur()" value="<?= e((int) ($book['volumes'] ?? 0)) ?>">
                 <p class="table-sub">0 = sách 1 tập. Nhập 2, 3... nếu sách có nhiều tập (vd: Kính vạn hoa 54 tập)</p>
             </div>
 

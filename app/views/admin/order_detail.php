@@ -7,6 +7,7 @@
     <div class="admin-columns">
         <div class="admin-column-main">
             <h2 class="section-title">Sản phẩm</h2>
+            <div class="table-responsive">
             <table class="admin-table">
                 <thead>
                 <tr>
@@ -39,6 +40,7 @@
                 <?php endforeach; ?>
                 </tbody>
             </table>
+            </div>
 
             <div class="summary-box">
                 <p>Tạm tính: <strong><?= formatPrice($order['subtotal']) ?></strong></p>
@@ -78,37 +80,31 @@
             </div>
 
             <div class="panel">
-                <h3 class="panel-title">Trạng thái hiện tại</h3>
-                <p><span class="badge badge-<?= e(orderStatusClass($order['status'])) ?>"><?= e(orderStatusLabel($order['status'])) ?></span></p>
+                <h3 class="panel-title">Cập nhật trạng thái</h3>
+                <p>Hiện tại: <span class="badge badge-<?= e(orderStatusClass($order['status'])) ?>"><?= e(orderStatusLabel($order['status'])) ?></span></p>
 
-                <?php if ($allowedStatuses !== []): ?>
-                    <form method="post" action="<?= url('/admin/don-hang/trang-thai') ?>" class="admin-form">
+                <?php if (!($isFinal ?? false) && ($statusOptions ?? []) !== []): ?>
+                    <form method="post" action="<?= url('/admin/don-hang/trang-thai') ?>" class="admin-form" style="margin-top: 12px;">
                         <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
                         <input type="hidden" name="id" value="<?= (int) $order['id'] ?>">
                         <div class="form-group">
-                            <label>Chuyển sang</label>
+                            <label>Trạng thái mới</label>
                             <select name="status">
-                                <?php foreach ($allowedStatuses as $s): ?>
-                                    <option value="<?= e($s) ?>"><?= e(orderStatusLabel($s)) ?></option>
+                                <?php foreach ($statusOptions as $s): ?>
+                                    <option value="<?= e($s) ?>" <?= $order['status'] === $s ? 'selected' : '' ?>><?= e(orderStatusLabel($s)) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-sm">Cập nhật trạng thái</button>
+                        <div class="form-group">
+                            <label>Ghi chú (lý do hủy / ghi chú cập nhật)</label>
+                            <input type="text" name="note" placeholder="Ghi chú (tùy chọn)">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm"
+                                onclick="return confirm('Xác nhận cập nhật trạng thái đơn hàng?')">Cập nhật trạng thái</button>
+                        <p class="table-sub" style="margin-top: 8px;">Chọn “Đã hủy” sẽ tự động hoàn lại tồn kho.</p>
                     </form>
                 <?php else: ?>
                     <p class="table-sub">Đơn hàng đã kết thúc ở trạng thái này.</p>
-                <?php endif; ?>
-
-                <?php if ($canCancel): ?>
-                    <form method="post" action="<?= url('/admin/don-hang/huy') ?>" class="admin-form" style="margin-top: 12px;">
-                        <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
-                        <input type="hidden" name="id" value="<?= (int) $order['id'] ?>">
-                        <div class="form-group">
-                            <label>Lý do hủy</label>
-                            <input type="text" name="note" placeholder="Ghi chú (tùy chọn)">
-                        </div>
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Hủy đơn hàng này? Tồn kho sẽ được hoàn lại.')">Hủy đơn hàng</button>
-                    </form>
                 <?php endif; ?>
             </div>
         </div>

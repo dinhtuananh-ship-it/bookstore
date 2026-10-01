@@ -65,6 +65,7 @@ class Router
         'admin/khuyen-mai/them'       => ['Admin\CouponController', 'create'],
         'admin/khuyen-mai/sua'        => ['Admin\CouponController', 'update'],
         'admin/khuyen-mai/xoa'        => ['Admin\CouponController', 'delete'],
+        'admin/khuyen-mai/doi-trang-thai' => ['Admin\CouponController', 'toggle'],
         'admin/binh-luan'             => ['Admin\ReviewController', 'index'],
         'admin/binh-luan/duyet'       => ['Admin\ReviewController', 'toggle'],
         'admin/binh-luan/xoa'         => ['Admin\ReviewController', 'delete'],

@@ -19,23 +19,33 @@ class CouponModel extends Model
         if (!$coupon) {
             return false;
         }
-        if ($subtotal < (float) $coupon['min_order']) {
+        if ((int) ($coupon['status'] ?? 0) !== 1) {
             return false;
         }
-        if ((int) $coupon['used_count'] >= (int) $coupon['max_uses']) {
+        if ($subtotal < (float) ($coupon['min_order'] ?? 0)) {
+            return false;
+        }
+        // max_uses = 0 nghĩa là không giới hạn lượt dùng
+        $maxUses = (int) ($coupon['max_uses'] ?? 0);
+        if ($maxUses > 0 && (int) $coupon['used_count'] >= $maxUses) {
             return false;
         }
         return true;
     }
 
+    // Cách tính dễ nhớ: nhập 50 nghĩa là giảm 50%, nhập 10 nghĩa là giảm 10%.
+    // Ví dụ đơn 200.000đ áp mã 50% thì giảm 200.000 * 50 / 100 = 100.000đ.
     public function calculateDiscount(?array $coupon, float $subtotal): float
     {
         if (!$coupon) {
             return 0.0;
         }
-        $discount = $coupon['type'] === 'percent'
-            ? $subtotal * (float) $coupon['value'] / 100
-            : (float) $coupon['value'];
+        if (($coupon['type'] ?? 'percent') === 'percent') {
+            $percent = max(0, min(100, (float) $coupon['value']));
+            $discount = $subtotal * $percent / 100;
+        } else {
+            $discount = max(0, (float) $coupon['value']);
+        }
         return min($discount, $subtotal);
     }
 
@@ -47,6 +57,16 @@ class CouponModel extends Model
     public function getAll(): array
     {
         return $this->fetchAll('SELECT * FROM coupons ORDER BY id DESC');
+    }
+
+    public function findById(int $id): ?array
+    {
+        return $this->fetchOne('SELECT * FROM coupons WHERE id = ?', [$id]);
+    }
+
+    public function setStatus(int $id, int $status): void
+    {
+        $this->query('UPDATE coupons SET status = ? WHERE id = ?', [$status === 1 ? 1 : 0, $id]);
     }
 
     public function codeExists(string $code, ?int $excludeId = null): bool

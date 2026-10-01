@@ -4,3 +4,14 @@
 [2026-08-30 17:21:12] 404: Controller not found: NonexistentPage123Controller - URI: /bookstore/nonexistent-page-123
 [2026-08-30 17:21:33] 404: Controller not found: NonexistentPage123Controller - URI: /bookstore/nonexistent-page-123
 [2026-08-30 17:21:37] 404: Controller not found: NonexistentPage123Controller - URI: /bookstore/nonexistent-page-123
+[2026-09-17 19:40:50] ERROR: mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\xampp\htdocs\bookstore\app\helpers\functions.php:374
+[2026-09-17 20:02:03] ERROR: mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\xampp\htdocs\bookstore\app\helpers\functions.php:374
+[2026-09-17 22:41:00] ERROR: mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\xampp\htdocs\bookstore\app\helpers\functions.php:374
+[2026-10-01 15:55:23] ERROR: mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\xampp\htdocs\bookstore\app\helpers\functions.php:374
+[2026-10-01 16:00:18] ERROR: mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\xampp\htdocs\bookstore\app\helpers\functions.php:374
+[2026-10-01 19:54:54] DB_ERROR: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it in C:\xampp\htdocs\bookstore\config\database.php:22
+[2026-10-01 20:12:02] EXCEPTION: Error: Class "Database" not found in C:\xampp\htdocs\bookstore\app\core\Model.php:10
+[2026-10-01 20:12:07] EXCEPTION: Error: Class "Database" not found in C:\xampp\htdocs\bookstore\app\core\Model.php:10
+[2026-10-01 20:14:05] FATAL: TypeError: sessionFlash(): Argument #2 ($message) must be of type ?string, array given, called in C:\xampp\htdocs\bookstore\app\controllers\Admin\CouponController.php on line 82 in C:\xampp\htdocs\bookstore\app\helpers\functions.php:114
+[2026-10-01 20:14:28] FATAL: TypeError: sessionFlash(): Argument #2 ($message) must be of type ?string, array given, called in C:\xampp\htdocs\bookstore\app\controllers\Admin\CouponController.php on line 82 in C:\xampp\htdocs\bookstore\app\helpers\functions.php:114
+[2026-10-01 20:27:20] ERROR: mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\xampp\htdocs\bookstore\app\helpers\functions.php:394

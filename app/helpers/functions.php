@@ -111,9 +111,10 @@ function requireAdmin(): void
     }
 }
 
-function sessionFlash(string $key, ?string $message = null): ?string
+function sessionFlash(string $key, mixed $message = null): mixed
 {
-    if ($message !== null) {
+    // Khi truyền 2 tham số là ghi flash (hỗ trợ string lẫn array để giữ old input / errors)
+    if (func_num_args() >= 2) {
         $_SESSION['flash'][$key] = $message;
         return null;
     }
@@ -170,6 +171,25 @@ function formatPrice(float $price): string
     return number_format($price, 0, ',', '.') . ' ₫';
 }
 
+// Hiển thị % đúng: 50 vẫn là 50%, không bị rtrim thành 5%. 10.5 vẫn là 10.5%.
+function formatPercent(float $value): string
+{
+    if ($value == (int) $value) {
+        return (string) (int) $value . '%';
+    }
+    $s = number_format($value, 2, '.', '');
+    $s = rtrim(rtrim($s, '0'), '.');
+    return $s . '%';
+}
+
+// Nhãn giảm giá dùng chung: percent thì 50%, fixed thì 50.000 ₫
+function couponLabel(array $coupon): string
+{
+    return ($coupon['type'] ?? 'percent') === 'percent'
+        ? formatPercent((float) ($coupon['value'] ?? 0))
+        : formatPrice((float) ($coupon['value'] ?? 0));
+}
+
 function coverUrl(?string $cover): string
 {
     $cover = trim((string) $cover);
@@ -185,6 +205,19 @@ function coverUrl(?string $cover): string
 function bookCover(array $book): string
 {
     return coverUrl($book['cover_image'] ?? null);
+}
+
+// Link banner: nếu là http thì giữ nguyên, nếu là /sach thì ghép BASE_URL để không bị 404
+function bannerUrl(?string $link): string
+{
+    $link = trim((string) $link);
+    if ($link === '') {
+        return '';
+    }
+    if (preg_match('#^https?://#i', $link)) {
+        return $link;
+    }
+    return url($link);
 }
 
 function cartItems(): array

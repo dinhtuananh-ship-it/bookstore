@@ -90,7 +90,7 @@
                     <div class="alert alert-error"><?= e($errors['coupon']) ?></div>
                 <?php endif; ?>
                 <?php if ($coupon): ?>
-                    <div class="alert alert-success">Đã áp dụng mã <strong><?= e($coupon['code']) ?></strong></div>
+                    <div class="alert alert-success">Đã áp dụng mã <strong><?= e($coupon['code']) ?></strong> (giảm <?= e(couponLabel($coupon)) ?>)</div>
                 <?php endif; ?>
             </section>
 

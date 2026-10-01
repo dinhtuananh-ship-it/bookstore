@@ -29,11 +29,12 @@
     <h2 class="section-title">📈 Doanh thu theo ngày</h2>
     <div class="chart">
         <?php foreach ($byDay as $row): ?>
+            <?php $w = $maxDayRevenue > 0 ? (float) $row['t'] / $maxDayRevenue * 100 : 0; ?>
             <div class="chart-row">
                 <div class="chart-label"><?= e(date('d/m', strtotime((string) $row['day']))) ?></div>
                 <div class="chart-track">
-                    <div class="chart-fill" data-width="<?= (float) $row['t'] / $maxDayRevenue * 100 ?>%"
-                         style="--w: <?= (float) $row['t'] / $maxDayRevenue * 100 ?>%"></div>
+                    <div class="chart-fill" data-width="<?= number_format($w, 2, '.', '') ?>%"
+                         style="--w: <?= number_format($w, 2, '.', '') ?>%"></div>
                 </div>
                 <div class="chart-value"><?= formatPrice((float) $row['t']) ?> (<?= (int) $row['c'] ?> đơn)</div>
             </div>
@@ -46,6 +47,7 @@
     <div class="admin-columns">
         <div class="admin-column-main">
             <h2 class="section-title">Top sách bán chạy</h2>
+            <div class="table-responsive">
             <table class="admin-table">
                 <thead>
                 <tr>
@@ -69,9 +71,11 @@
                 <?php endif; ?>
                 </tbody>
             </table>
+            </div>
         </div>
         <div class="admin-column-main">
             <h2 class="section-title">Top khách hàng</h2>
+            <div class="table-responsive">
             <table class="admin-table">
                 <thead>
                 <tr>
@@ -98,6 +102,7 @@
                 <?php endif; ?>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </section>

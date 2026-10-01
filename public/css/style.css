@@ -2353,4 +2353,133 @@ html:not(.js) .chart-fill { width: var(--w, 100%); }
     .order-detail-layout { flex-direction: column; }
     .order-detail-side { width: 100%; }
     .to-top { right: 14px; bottom: 16px; }
+    .admin-head { flex-wrap: wrap; }
+    .filter-bar { overflow-x: auto; }
+    .chart-row { flex-wrap: wrap; }
+    .chart-value { width: 100%; text-align: left; }
+}
+
+/* ===== Admin UI fixes & collapsible form panels (xổ ra kiểu thêm sách) ===== */
+.admin-head { flex-wrap: wrap; }
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius); }
+.table-responsive .admin-table { min-width: 680px; }
+.admin-table th { white-space: nowrap; }
+.admin-table td { vertical-align: middle; }
+.table-actions { white-space: nowrap; }
+.admin-form input[type="date"],
+.admin-form input[type="time"],
+.admin-form select {
+    width: 100%;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 11px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #fff;
+}
+.filter-bar input[type="date"] { min-width: 150px; }
+
+/* Panel xổ ra: ẩn sẵn, bấm nút Thêm/Sửa mới xổ xuống */
+.collapsible { display: none; }
+.collapsible.open {
+    display: block;
+    animation: collapse-in 0.35s var(--ease-out);
+    scroll-margin-top: 84px;
+}
+@keyframes collapse-in {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.form-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+}
+.form-card > h3 {
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-soft);
+}
+.toggle-btn.active {
+    background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+}
+@media (max-width: 600px) {
+    .form-card { padding: 16px; }
+}
+
+/* ===== Modal popup (dùng cho Thêm/Sửa khuyến mãi) ===== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(15, 20, 30, 0.5);
+    display: none;
+    padding: 24px 16px;
+    overflow-y: auto;
+}
+.modal-overlay.open { display: flex; animation: modal-fade 0.22s var(--ease-out); }
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+    margin: auto;
+    width: 100%;
+    max-width: 860px;
+    max-height: calc(100vh - 48px);
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+    animation: modal-pop 0.3s var(--ease-bounce);
+}
+@keyframes modal-pop {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+}
+.modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+    flex-shrink: 0;
+}
+.modal-head h3 { font-size: 17px; color: var(--ink); }
+.modal-close {
+    border: none;
+    background: var(--line-soft);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 15px;
+    cursor: pointer;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: all 0.2s var(--ease-out);
+}
+.modal-close:hover { background: var(--kd-red); color: #fff; transform: rotate(90deg); }
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+}
+.modal-foot {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-soft);
+}
+body.modal-open { overflow: hidden; }
+@media (max-width: 768px) {
+    .modal-overlay { padding: 16px 10px; }
+    .modal { max-height: calc(100vh - 32px); }
+    .modal-body { padding: 16px; }
 }

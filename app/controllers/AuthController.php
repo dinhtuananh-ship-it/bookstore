@@ -4,7 +4,7 @@ declare(strict_types=1);
 class AuthController extends Controller
 {
     private const MAX_ATTEMPTS = 5;
-    private const LOCK_MINUTES = 15;
+    private const LOCK_MINUTES =15;
 
     private UserModel $userModel;
 
