@@ -211,12 +211,20 @@ class OrderModel extends Model
         ];
     }
 
+    // Doanh thu chỉ tính đơn đã giao, lọc theo ngày duyệt xong (ngày completed trong lịch sử)
+    // để duyệt hôm nay thì hôm nay tăng tiền. Nếu đơn completed mà thiếu lịch sử thì fallback ngày đặt.
+    private function completedDateSql(string $alias = 'o'): string
+    {
+        return "COALESCE((SELECT MIN(h.created_at) FROM order_status_history h WHERE h.order_id = {$alias}.id AND h.status = 'completed'), {$alias}.created_at)";
+    }
+
     public function reportSummary(string $from, string $to): array
     {
+        $completedDate = $this->completedDateSql('o');
         $row = $this->fetchOne(
-            "SELECT COUNT(*) AS c, COALESCE(SUM(total), 0) AS t
-             FROM orders
-             WHERE status NOT IN ('cancelled') AND DATE(created_at) BETWEEN ? AND ?",
+            "SELECT COUNT(*) AS c, COALESCE(SUM(o.total), 0) AS t
+             FROM orders o
+             WHERE o.status = 'completed' AND DATE({$completedDate}) BETWEEN ? AND ?",
             [$from, $to]
         );
 
@@ -232,11 +240,12 @@ class OrderModel extends Model
 
     public function revenueByDay(string $from, string $to): array
     {
+        $completedDate = $this->completedDateSql('o');
         return $this->fetchAll(
-            "SELECT DATE(created_at) AS day, COUNT(*) AS c, COALESCE(SUM(total), 0) AS t
-             FROM orders
-             WHERE status NOT IN ('cancelled') AND DATE(created_at) BETWEEN ? AND ?
-             GROUP BY DATE(created_at)
+            "SELECT DATE({$completedDate}) AS day, COUNT(*) AS c, COALESCE(SUM(o.total), 0) AS t
+             FROM orders o
+             WHERE o.status = 'completed' AND DATE({$completedDate}) BETWEEN ? AND ?
+             GROUP BY DATE({$completedDate})
              ORDER BY day",
             [$from, $to]
         );
@@ -258,12 +267,13 @@ class OrderModel extends Model
     public function topBooks(string $from, string $to, int $limit = 5): array
     {
         $limit = max(1, $limit);
+        $completedDate = $this->completedDateSql('o');
         return $this->fetchAll(
             "SELECT b.title, SUM(oi.quantity) AS qty, SUM(oi.price * oi.quantity) AS revenue
              FROM order_items oi
              JOIN orders o ON o.id = oi.order_id
              JOIN books b ON b.id = oi.book_id
-             WHERE o.status NOT IN ('cancelled') AND DATE(o.created_at) BETWEEN ? AND ?
+             WHERE o.status = 'completed' AND DATE({$completedDate}) BETWEEN ? AND ?
              GROUP BY oi.book_id, b.title
              ORDER BY qty DESC, revenue DESC
              LIMIT {$limit}",
@@ -274,11 +284,12 @@ class OrderModel extends Model
     public function topCustomers(string $from, string $to, int $limit = 5): array
     {
         $limit = max(1, $limit);
+        $completedDate = $this->completedDateSql('o');
         return $this->fetchAll(
             "SELECT u.id, u.name, u.email, COUNT(o.id) AS orders, COALESCE(SUM(o.total), 0) AS total
              FROM users u
              JOIN orders o ON o.user_id = u.id
-             WHERE o.status NOT IN ('cancelled') AND DATE(o.created_at) BETWEEN ? AND ?
+             WHERE o.status = 'completed' AND DATE({$completedDate}) BETWEEN ? AND ?
              GROUP BY u.id, u.name, u.email
              ORDER BY total DESC
              LIMIT {$limit}",
@@ -288,8 +299,9 @@ class OrderModel extends Model
 
     public function stats(): array
     {
+        // Tổng quan: doanh thu chỉ cộng đơn đã giao để khi update sang completed thì tiền tăng lên
         $revenue = (float) ($this->fetchOne(
-            "SELECT COALESCE(SUM(total), 0) AS t FROM orders WHERE status NOT IN ('cancelled')"
+            "SELECT COALESCE(SUM(total), 0) AS t FROM orders WHERE status = 'completed'"
         )['t'] ?? 0);
 
         $count = (int) ($this->fetchOne('SELECT COUNT(*) AS c FROM orders')['c'] ?? 0);

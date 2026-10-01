@@ -14,17 +14,38 @@
     <div class="stat-grid">
         <div class="stat-card">
             <div class="stat-value"><?= number_format((int) $summary['count']) ?></div>
-            <div class="stat-label">Đơn hàng (không hủy)</div>
+            <div class="stat-label">Đơn đã giao (completed)</div>
         </div>
         <div class="stat-card">
             <div class="stat-value"><?= formatPrice((float) $summary['revenue']) ?></div>
-            <div class="stat-label">Doanh thu</div>
+            <div class="stat-label">Doanh thu (đơn đã giao)</div>
         </div>
         <div class="stat-card">
             <div class="stat-value"><?= formatPrice((float) $summary['avg']) ?></div>
             <div class="stat-label">Giá trị trung bình/đơn</div>
         </div>
     </div>
+
+    <h2 class="section-title">🧾 Đơn theo trạng thái (trong khoảng ngày)</h2>
+    <div class="stat-grid">
+        <?php
+        $statusMeta = [
+            'pending' => 'Chờ xử lý',
+            'paid' => 'Đã thanh toán',
+            'processing' => 'Đang xử lý',
+            'shipping' => 'Đang giao',
+            'completed' => 'Đã giao',
+            'cancelled' => 'Đã hủy',
+        ];
+        ?>
+        <?php foreach ($statusMeta as $st => $label): ?>
+            <div class="stat-card">
+                <div class="stat-value"><?= number_format((int) ($byStatus[$st] ?? 0)) ?></div>
+                <div class="stat-label"><?= e($label) ?></div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <p class="muted">Mẹo: đổi đơn sang Đã giao thì cột ngày hôm nay tăng thêm một đơn và cộng thêm tiền. Doanh thu theo ngày tính theo ngày duyệt xong, không phải ngày đặt.</p>
 
     <h2 class="section-title">📈 Doanh thu theo ngày</h2>
     <div class="chart">
